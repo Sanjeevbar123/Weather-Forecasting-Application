@@ -86,17 +86,21 @@ function App() {
           <div className="mt-5">
             <h2>5-Day Forecast:</h2>
             <div className="row">
-              {forecastData.list.slice(0, 5).map((forecast, index) => (
-                <div className="col-md-2" key={index}>
-                  <div className="card">
-                    <div className="card-body">
-                      <h5>{new Date(forecast.dt_txt).toLocaleDateString()}</h5>
-                      <p>{forecast.weather[0].description}</p>
-                      <p>Temp: {forecast.main.temp} °C</p>
+              {/* Group forecasts by day */}
+              {Array.from(new Set(forecastData.list.map(f => f.dt_txt.split(' ')[0]))).slice(0, 5).map((date, index) => {
+                const dailyForecast = forecastData.list.find(forecast => forecast.dt_txt.startsWith(date));
+                return (
+                  <div className="col-md-2" key={index}>
+                    <div className="card">
+                      <div className="card-body">
+                        <h5>{new Date(dailyForecast.dt_txt).toLocaleDateString()}</h5>
+                        <p>{dailyForecast.weather[0].description}</p>
+                        <p>Temp: {dailyForecast.main.temp} °C</p>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         )}
@@ -109,4 +113,3 @@ function App() {
 }
 
 export default App;
-
